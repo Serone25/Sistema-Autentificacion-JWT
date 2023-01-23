@@ -3,8 +3,35 @@ import { Link } from "react-router-dom";
 
 import { Context } from "../store/appContext";
 
+import { useNavigate } from "react-router-dom";
+
 export const Demo = () => {
 	const { store, actions } = useContext(Context);
+
+	const navigate = useNavigate();
+
+	useEffect(() =>{
+		var myHeaders = new Headers();
+		myHeaders.append("Authorization","Bearer "+localStorage.getItem("token"));
+		myHeaders.append("Content-Type", "application/json");
+
+
+		var requestOptions = {
+  			method: 'GET',
+  			headers: myHeaders,
+  			redirect: 'follow'
+		};
+
+		fetch("https://3001-4geeksacade-reactflaskh-u5ios1wi99r.ws-eu77.gitpod.io/api/private", requestOptions)
+  			.then(response => response.json())
+  			.then(result => {
+				if(!result.tokenCorrecto){
+					navigate("/");
+				}
+			})
+  			.catch(error => console.log('error', error));
+
+	},[])
 
 	return (
 		<div className="container">
